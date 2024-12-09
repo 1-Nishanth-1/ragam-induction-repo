@@ -4,34 +4,62 @@ import { useState, useEffect } from "react";
 export default function Home() {
   const [data, setData] = useState([]);
   const [timeframe, setTimeframe] = useState("daily");
+  const [isLight, setIsLight] = useState(false);
+
   useEffect(() => {
     fetch("/data.json")
       .then((response) => response.json())
       .then((data) => setData(data));
   }, []);
 
+  const toggleTheme = () => {
+    setIsLight((prev) => !prev);
+  };
+
   return (
-    <div className="flex items-center justify-center">
-      <div className="flex sm:flex-row flex-col lg:gap-x-4 gap-2 my-[25vh] lg:w-[1100px] sm:w-[800px] w-[350px] ">
-        <div className="flex bg-[hsl(235,46%,20%)] rounded-xl text-white lg:w-[25%] sm:w-[35%] w-[100%] overflow-hidden flex-col lg:h-[570px]">
-          <div className="sm:block flex bg-blue-800 rounded-xl relative z-10 lg:-translate-y-[230px] sm:-translate-y-[300px] translate-y-[-470px] lg:pt-[200px] pt-[350px] w-full sm:pb-[50px] h-full">
+    <div
+      className={`flex items-center justify-center ${
+        isLight ? "bg-white text-black" : "bg-[hsl(226, 43%, 10%)] text-white"
+      }`}
+    >
+      <div className="absolute top-5 right-5">
+        <button
+          onClick={toggleTheme}
+          className={`px-4 py-2 rounded ${
+            isLight ? "bg-black text-white" : "bg-white text-black"
+          }`}
+        >
+          {isLight ? "Dark Mode" : "Light Mode"}
+        </button>
+      </div>
+      <div className="flex sm:flex-row flex-col lg:gap-x-4 gap-2 my-[15vh] lg:w-[1100px] sm:w-[800px] w-[350px]">
+        <div
+          className={`flex ${
+            isLight ? "bg-gray-200" : "bg-[hsl(235,46%,20%)]"
+          } rounded-xl lg:w-[25%] sm:w-[35%] w-[100%] overflow-hidden flex-col lg:h-[570px]`}
+        >
+          <div
+            className={`sm:block flex ${
+              isLight ? "bg-blue-300" : "bg-blue-800"
+            } rounded-xl relative z-10 lg:-translate-y-[230px] sm:-translate-y-[300px] translate-y-[-470px] lg:pt-[200px] pt-[350px] w-full sm:pb-[50px] h-full`}
+          >
             <img
               src="images/image-jeremy.png"
               className="border-white border border-[5px] lg:scale-[0.4] sm:scale-[0.45] scale-[0.35] rounded-full sm:-mx-9 sm:translate-y-[0] translate-y-[55px] sm:translate-x-[0] translate-x-[-65px]"
               alt="Jeremy Robson"
             />
-            <div className=" lg:translate-y-[-50px] sm:translate-y-[0] translate-y-[150px] sm:translate-x-[0] translate-x-[-160px]">
+            <div className="lg:translate-y-[-50px] sm:translate-y-[0] translate-y-[150px] sm:translate-x-[0] translate-x-[-160px]">
               <div className="text-md px-7 opacity-70">Report For</div>
               <div className="text-3xl px-7 sm:text-wrap text-nowrap">
                 Jeremy Robson
               </div>
             </div>
           </div>
-          <div className="text-xl flex sm:gap-5 gap-10 justify-evenly p-7 sm:flex-col flex-row sm:my-[-280px] lg:my-[-200px] mt-[-470px] ">
+          <div className="text-xl flex sm:gap-5 gap-10 justify-evenly p-7 sm:flex-col flex-row sm:my-[-280px] lg:my-[-200px] mt-[-470px]">
             <div
               onClick={() => setTimeframe("daily")}
               className={`cursor-pointer ${
-                timeframe === "daily" ? "" : "opacity-70"
+                timeframe === "daily" ? "" : "opacity-60 hover:opacity-90"
               }`}
             >
               Daily
@@ -39,7 +67,7 @@ export default function Home() {
             <div
               onClick={() => setTimeframe("weekly")}
               className={`cursor-pointer z-[100] ${
-                timeframe === "weekly" ? "" : "opacity-70"
+                timeframe === "weekly" ? "" : "opacity-60 hover:opacity-90"
               }`}
             >
               Weekly
@@ -47,7 +75,7 @@ export default function Home() {
             <div
               onClick={() => setTimeframe("monthly")}
               className={`cursor-pointer z-[100] ${
-                timeframe === "monthly" ? "" : "opacity-70"
+                timeframe === "monthly" ? "" : "opacity-60 hover:opacity-90"
               }`}
             >
               Monthly
@@ -62,8 +90,12 @@ export default function Home() {
             return (
               <div
                 key={index}
-                className="flex rounded-xl text-white lg:w-[30%] sm:w-[47%] w-[100%] overflow-hidden hover:scale-105 transform transition-transform duration-500"
-                style={{ backgroundColor: item.color }}
+                className={`flex rounded-xl ${
+                  isLight ? "text-black" : "text-white"
+                } lg:w-[30%] sm:w-[47%] w-[100%] overflow-hidden hover:scale-105 transform transition-transform duration-500`}
+                style={{
+                  backgroundColor: item.color,
+                }}
               >
                 <div className="relative w-full h-full">
                   <div className="absolute top-0 right-5 w-[50px] h-[50px]">
@@ -73,7 +105,13 @@ export default function Home() {
                       className="w-full h-full object-contain scale-150"
                     />
                   </div>
-                  <div className="bg-[hsl(235,46%,20%)] pl-7 pr-7 rounded-xl relative z-10 h-full translate-y-10 pt-7">
+                  <div
+                    className={`${
+                      isLight
+                        ? "bg-gray-300 hover:opacity-90"
+                        : "bg-[hsl(235,46%,20%)] hover:opacity-90"
+                    } pl-7 pr-7 rounded-xl relative z-10 h-full translate-y-10 pt-7`}
+                  >
                     <div className="text-lg flex items-center justify-between">
                       <span>{item.title}</span>
                       <img
@@ -82,7 +120,7 @@ export default function Home() {
                         className="cursor-pointer"
                       />
                     </div>
-                    <div className="flex justify-between  sm:flex-col pb-9">
+                    <div className="flex justify-between sm:flex-col pb-9">
                       <div className="lg:text-6xl sm:text-5xl text-4xl sm:mt-2 sm:pt-5">
                         {current}hrs
                       </div>
